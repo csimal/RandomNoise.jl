@@ -1,4 +1,4 @@
-using NoiseRNG
+using RandomNoise
 using Test
 
 @testset "NoiseRNG.jl" begin

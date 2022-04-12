@@ -6,7 +6,7 @@ The SquirrelNoise5 32 bits random noise function, originally by Squirrel Eiserlo
 
 See http://eiserloh.net/noise/SquirrelNoise5.hpp for the original C++ code.
 """
-struct SquirrelNoise5 <: AbstractNoise
+struct SquirrelNoise5 <: AbstractNoise{UInt32}
     seed::UInt32
 end
 

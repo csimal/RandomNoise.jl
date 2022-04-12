@@ -1,7 +1,10 @@
-name = "NoiseRNG"
+name = "RandomNoise"
 uuid = "cdc879b2-80b7-4333-9dca-dc35859d33da"
 authors = ["Cédric Simal", "University of Namur"]
 version = "0.1.0"
+
+[deps]
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [compat]
 julia = "1"

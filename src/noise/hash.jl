@@ -4,7 +4,7 @@
 
 A noise function using Base.hash
 """
-struct HashNoise <: AbstractNoise
+struct HashNoise <: AbstractNoise{UInt}
     seed::UInt
 end
 
