@@ -5,14 +5,18 @@
 The SquirrelNoise5 32 bits random noise function, originally by Squirrel Eiserloh.
 
 See http://eiserloh.net/noise/SquirrelNoise5.hpp for the original C++ code.
+
+## Fields
+* `seed::UInt32 = 0` seed of the noise function.
 """
 struct SquirrelNoise5 <: AbstractNoise{UInt32}
     seed::UInt32
+    SquirrelNoise5(n) = new(n % UInt32)
 end
 
 SquirrelNoise5() = SquirrelNoise5(UInt32(0))
 
-function noise(n::UInt32, s::SquirrelNoise5)
+@inline function noise(n::UInt32, s::SquirrelNoise5)
     SQ5_BIT_NOISE1::UInt32 = 0xd2a80a3f
     SQ5_BIT_NOISE2::UInt32 = 0xa884f197
     SQ5_BIT_NOISE3::UInt32 = 0x6C736F4B
