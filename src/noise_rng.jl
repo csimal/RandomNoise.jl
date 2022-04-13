@@ -1,6 +1,8 @@
 import Random
 import Random: AbstractRNG, rand, UInt52, rng_native_52
 
+# NB. copied from https://github.com/JuliaRandom/RandomNumbers.jl/blob/master/src/common.jl
+const BitTypes = Union{Bool, UInt8, UInt16, UInt32, UInt64, UInt128, Int8, Int16, Int32, Int64, Int128}
 mutable struct NoiseRNG{N,T} <: AbstractRNG where {N,T<:AbstractNoise{N}}
     noise::T
     counter::N
@@ -13,8 +15,6 @@ NoiseRNG(noise::AbstractNoise{N}) where {N} = NoiseRNG(noise, zero(N))
     noise(rng.counter-1, rng.noise)
 end
 
-# NB. copied from https://github.com/JuliaRandom/RandomNumbers.jl/blob/master/src/common.jl
-const BitTypes = Union{Bool, UInt8, UInt16, UInt32, UInt64, UInt128, Int8, Int16, Int32, Int64, Int128}
 
 rng_native_52(::NoiseRNG) = UInt64
 rand(rng::NoiseRNG, ::Random.SamplerType{T}) where {T<:BitTypes} = rand(rng,T)
