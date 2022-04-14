@@ -5,6 +5,7 @@
         @test SquirrelNoise5(1) == SquirrelNoise5(0x00000001)
 
         sqn = SquirrelNoise5()
+        @test typeof(noise(0,sqn)) == UInt32
         @test noise(0x00000000, sqn) == 0x16791e00
         @test noise(0, sqn) == 0x16791e00
         @test noise(0x00000001,sqn) == 0xc895cb1d
@@ -22,15 +23,7 @@
         @test HashNoise(1) == HashNoise(0x0000000000000001)
 
         hn = HashNoise()
-        @test noise(0, hn) == 0x1060bc221fc86ae0
-        @test noise(0x0000000000000000, hn) == 0x1060bc221fc86ae0
-        @test noise(1, hn) == 0xf45b969ce741991e
-        @test noise(0x0000000000000001, hn) == 0xf45b969ce741991e
-
-        hn1 = HashNoise(1)
-        @test noise(0, hn1) == 0x64702cb1c95ce026
-        @test noise(0x0000000000000000, hn1) == 0x64702cb1c95ce026
-        @test noise(1, hn1) == 0x486b072c90d60e64
-        @test noise(0x0000000000000001, hn1) == 0x486b072c90d60e64
+        @test typeof(noise(0,hn)) == UInt64
+        # NB. We don't test specific values since it depends on the implementation of Base.hash, which varies between versions.
     end
 end
