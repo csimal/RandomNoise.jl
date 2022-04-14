@@ -10,6 +10,8 @@ end
 
 NoiseRNG(noise::AbstractNoise{N}) where {N} = NoiseRNG(noise, zero(N))
 
+Base.copy(rng::NoiseRNG) = NoiseRNG(rng.noise,rng.counter)
+
 @inline function rand(rng::NoiseRNG{N,T}, ::Type{N}) where {N<:BitTypes,T<:AbstractNoise{N}}
     rng.counter += 1
     noise(rng.counter-1, rng.noise)
@@ -31,9 +33,9 @@ rand(rng::NoiseRNG, ::Random.SamplerType{T}) where {T<:BitTypes} = rand(rng,T)
 end
 
 @inline function rand(rng::NoiseRNG{N,T}, ::Type{Float64}=Float64) where {N<:Union{UInt64,UInt128},T}
-    reinterpret(Float64, Base.exponent_one(Float64) | rand(rng, UInt52())) - 1.0
+    noise_convert(rand(rng, UInt64), Float64)
 end
 
 @inline function rand(rng::NoiseRNG{N,T}, ::Type{Float64}=Float64) where {N<:Union{UInt8,UInt16,UInt32}, T}
-    rand(rng, N) * exp2(-sizeof(N) << 3)
+    noise_convert(rand(rng, N), Float64)
 end
