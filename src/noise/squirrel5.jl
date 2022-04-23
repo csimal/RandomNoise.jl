@@ -16,6 +16,8 @@ end
 
 SquirrelNoise5() = SquirrelNoise5(UInt32(0))
 
+Base.:(==)(sqn1::SquirrelNoise5, sqn2::SquirrelNoise5) = sqn1.seed == sqn2.seed
+
 @inline function noise(n::UInt32, s::SquirrelNoise5)
     SQ5_BIT_NOISE1::UInt32 = 0xd2a80a3f
     SQ5_BIT_NOISE2::UInt32 = 0xa884f197

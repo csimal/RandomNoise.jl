@@ -10,7 +10,15 @@ end
 
 NoiseRNG(noise::AbstractNoise{N}) where {N} = NoiseRNG(noise, zero(N))
 
+Base.:(==)(rng1::NoiseRNG{N,T}, rng2::NoiseRNG{N,T}) where {N,T} = (rng1.noise == rng2.noise) && (rng1.counter == rng2.counter)
+
 Base.copy(rng::NoiseRNG) = NoiseRNG(rng.noise,rng.counter)
+
+function Base.copy!(dst::NoiseRNG{N,T}, src::NoiseRNG{N,T}) where {N,T}
+    dst.noise = src.noise
+    dst.counter = src.counter
+    dst
+end
 
 @inline function rand(rng::NoiseRNG{N,T}, ::Type{N}) where {N<:BitTypes,T<:AbstractNoise{N}}
     rng.counter += 1

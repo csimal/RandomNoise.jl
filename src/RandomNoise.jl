@@ -15,6 +15,7 @@ include("utils/pairing_functions.jl")
 
 #export NoiseFunction
 
+include("utils/convert.jl")
 include("noise_rng.jl")
 
 export NoiseRNG

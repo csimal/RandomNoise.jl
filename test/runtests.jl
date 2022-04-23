@@ -6,4 +6,5 @@ using Test
     include("pairing_functions.jl")
     include("noise.jl")
     include("random123.jl")
+    include("noise_rng.jl")
 end
