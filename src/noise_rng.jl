@@ -3,6 +3,26 @@ import Random: AbstractRNG, rand, UInt52, rng_native_52
 
 # NB. copied from https://github.com/JuliaRandom/RandomNumbers.jl/blob/master/src/common.jl
 const BitTypes = Union{Bool, UInt8, UInt16, UInt32, UInt64, UInt128, Int8, Int16, Int32, Int64, Int128}
+
+"""
+    NoiseRNG{N,T} <: AbstractRNG where {N,T<:AbstractNoise{N}}
+
+Wrapper type to use a noise function as a rng for use in `rand()`.
+
+## Fields
+* `noise::T` : the noise function.
+* `counter::N = zero(N)` : a counter indicating where the sequence of generated numbers is currently at.
+
+
+## Examples
+```jldoctest
+julia> rng = NoiseRNG(SquirrelNoise5())
+NoiseRNG{UInt32, SquirrelNoise5}(SquirrelNoise5(0x00000000), 0x00000000)
+
+julia> rand(rng)
+0.08778560161590576
+````
+"""
 mutable struct NoiseRNG{N,T} <: AbstractRNG where {N,T<:AbstractNoise{N}}
     noise::T
     counter::N

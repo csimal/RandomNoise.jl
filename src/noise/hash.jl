@@ -2,7 +2,9 @@
 """
     HashNoise
 
-A noise function using `Base.hash`.
+A 64 bits noise function using `Base.hash`.
+
+This noise function depends on the implementation of `Base.hash` in the standard Julia library, so it may change depending on your Julia version. Don't use it if you want to guarrantee reproducibility accross Julia versions.
 
 ## Fields
 `seed:UInt` seed of the noise function. Note that the constructor uses the hash of its argument to get the seed.

@@ -8,6 +8,18 @@ See http://eiserloh.net/noise/SquirrelNoise5.hpp for the original C++ code.
 
 ## Fields
 * `seed::UInt32 = 0` seed of the noise function.
+
+## Examples
+```jldoctest
+julia> noise(0,SquirrelNoise5())
+0x16791e00
+
+julia> noise(1,SquirrelNoise5())
+0xc895cb1d
+
+julia> noise(0,SquirrelNoise5(32))
+0x9ef5c661
+```
 """
 struct SquirrelNoise5 <: AbstractNoise{UInt32}
     seed::UInt32
@@ -18,13 +30,13 @@ SquirrelNoise5() = SquirrelNoise5(UInt32(0))
 
 Base.:(==)(sqn1::SquirrelNoise5, sqn2::SquirrelNoise5) = sqn1.seed == sqn2.seed
 
-@inline function noise(n::UInt32, s::SquirrelNoise5)
-    SQ5_BIT_NOISE1::UInt32 = 0xd2a80a3f
-    SQ5_BIT_NOISE2::UInt32 = 0xa884f197
-    SQ5_BIT_NOISE3::UInt32 = 0x6C736F4B
-    SQ5_BIT_NOISE4::UInt32 = 0xB79F3ABB
-    SQ5_BIT_NOISE5::UInt32 = 0x1b56c4f5
+const SQ5_BIT_NOISE1 = 0xd2a80a3f
+const SQ5_BIT_NOISE2 = 0xa884f197
+const SQ5_BIT_NOISE3 = 0x6C736F4B
+const SQ5_BIT_NOISE4 = 0xB79F3ABB
+const SQ5_BIT_NOISE5 = 0x1b56c4f5
 
+@inline function noise(n::UInt32, s::SquirrelNoise5)
     # NB. ⊻ == bitwise xor (\xor<TAB> to get the symbol)
     mangledbits = n
     mangledbits *= SQ5_BIT_NOISE1
