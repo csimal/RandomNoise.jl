@@ -16,4 +16,4 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Random123 = "74087812-796a-5b5d-8853-05524746bad3"
 
 [targets]
-test = ["Test", "Random123"]
+test = ["Test", "Random123", "Random"]

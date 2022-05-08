@@ -1,5 +1,6 @@
 using RandomNoise
 using Random123
+using Random
 using Test
 
 @testset "RandomNoise.jl" begin
