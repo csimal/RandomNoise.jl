@@ -1,5 +1,14 @@
 
 
+"""
+    noise_convert(r::Integer, ::Type{AbstractFloat})
+
+Convert an integer to a floating point number in [0,1).
+
+This is intended to use with random number generators, so the output is uniformly distributed over [0,1).
+"""
+function noise_convert end
+
 function noise_convert(r::N, ::Type{Float64}) where {N<:Union{UInt8,UInt16,UInt32}}
     r * exp2(-sizeof(N) << 3)
 end
