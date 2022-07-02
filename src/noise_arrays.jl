@@ -1,4 +1,4 @@
-using Base: oneto
+using Base: OneTo
 
 import Base: axes, size, getindex, setindex!, IndexStyle, show, ==
 
@@ -24,21 +24,21 @@ function NoiseArray{T,N,R,F}(rng::R, transform::F, sz::Axes) where Axes<:Tuple{V
 end
 
 function NoiseArray{T}(rng::R, transform::F, sz::Vararg{Integer,N}) where {R<:AbstractNoise,T,N,F}
-    NoiseArray{T,N,R,F}(rng, transform, oneto.(sz))
+    NoiseArray{T,N,R,F}(rng, transform, OneTo.(sz))
 end
 
 function NoiseArray{T}(rng::R, transform::F, sz::SZ) where {R<:AbstractNoise,SZ<:Tuple{Vararg{Integer,N}}} where {T,N,F}
-    NoiseArray{T,N,R,F}(rng, transform, oneto.(sz))
+    NoiseArray{T,N,R,F}(rng, transform, OneTo.(sz))
 end
 
 function NoiseArray(rng::R, transform::F, sz::Vararg{Integer,N}) where {R<:AbstractNoise} where {N,F}
     T = typeof(transform(noise(1,rng)))
-    NoiseArray{T,N,R,F}(rng, transform, oneto.(sz))
+    NoiseArray{T,N,R,F}(rng, transform, OneTo.(sz))
 end
 
 function NoiseArray(rng::R, transform::F, sz::SZ) where {R<:AbstractNoise,SZ<:Tuple{Vararg{Integer,N}}} where {N,F}
     T = typeof(transform(noise(1,rng)))
-    NoiseArray{T,N,R,F}(rng, transform, oneto.(sz))
+    NoiseArray{T,N,R,F}(rng, transform, OneTo.(sz))
 end
 
 
