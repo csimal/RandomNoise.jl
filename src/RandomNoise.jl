@@ -20,6 +20,11 @@ include("noise_rng.jl")
 
 export NoiseRNG
 
+include("utils/transforms.jl")
+include("noise_arrays.jl")
+
+export NoiseArray
+
 # Optional wrappers around Random123's CBRNGs.
 using Requires
 
