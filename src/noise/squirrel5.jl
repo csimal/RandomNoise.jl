@@ -36,11 +36,13 @@ const SQ5_BIT_NOISE3 = 0x6C736F4B
 const SQ5_BIT_NOISE4 = 0xB79F3ABB
 const SQ5_BIT_NOISE5 = 0x1b56c4f5
 
-@inline function noise(n::UInt32, s::SquirrelNoise5)
+@inline noise(n::UInt32, s::SquirrelNoise5) = squirrel_noise(n, s.seed)
+
+@inline function squirrel_noise(n::UInt32, seed::UInt32)
     # NB. ⊻ == bitwise xor (\xor<TAB> to get the symbol)
     mangledbits = n
     mangledbits *= SQ5_BIT_NOISE1
-    mangledbits += s.seed
+    mangledbits += seed
     mangledbits ⊻= (mangledbits >> 9)
     mangledbits += SQ5_BIT_NOISE2
     mangledbits ⊻= (mangledbits >> 11)

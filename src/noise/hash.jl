@@ -18,6 +18,8 @@ Base.:(==)(hn1::HashNoise, hn2::HashNoise) = hn1.seed == hn2.seed
 
 HashNoise() = HashNoise(UInt(0))
 
-function noise(n::UInt, h::HashNoise)
-    Base.hash(n, h.seed)
+@inline noise(n::UInt, h::HashNoise) = hash_noise(n, h.seed)
+
+function hash_noise(n::UInt, seed::UInt)
+    Base.hash(n, seed)
 end
