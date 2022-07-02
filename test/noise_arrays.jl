@@ -37,13 +37,16 @@
             A = NoiseArray(SquirrelNoise5(), Bernoulli(), 5,5)
 
             @test eltype(A) == Bool
+            @test A === NoiseArray{Bool}(SquirrelNoise5(), Bernoulli(), 5,5)
             @test A === NoiseArray(SquirrelNoise5(), Bernoulli(), (5,5))
+            @test typeof(A[1,1]) == Bool
         end
         @testset "Poisson" begin
             A = NoiseArray(SquirrelNoise5(), Poisson(), 5,5)
 
             @test eltype(A) == Int
             @test A === NoiseArray(SquirrelNoise5(), Poisson(), (5,5))
+            @test typeof(A[1,1]) == Int
         end
     end
 end

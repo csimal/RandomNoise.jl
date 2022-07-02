@@ -14,7 +14,7 @@ end
 
 NoiseArray(rng, d::Distributions.Bernoulli, sz...) = NoiseArray{Bool}(rng, d, sz...)
 
-Base.@propagate_inbounds @inline function getindex(A::NoiseArray{Bool,N,R,Distributions.Bernoulli}, i::Integer) where {N,R}
+Base.@propagate_inbounds @inline function getindex(A::NoiseArray{Bool,N,R,F}, i::Integer) where {N,R,F<:Distributions.Bernoulli}
     @boundscheck checkbounds(A,i)
-    noise_convert(noise(i, A.noise)) < A.transform.p
+    isless(noise_convert(noise(i, A.noise), Float64), A.transform.p)
 end
