@@ -7,6 +7,8 @@
         @test NoiseArray(sqn, identity, 5,5) isa AbstractMatrix{UInt32}
         @test NoiseArray(sqn, identity, 5) === NoiseArray(sqn, identity, (5,))
         @test NoiseArray(sqn, identity, 5,5) === NoiseArray(sqn, identity, (5,5))
+        @test NoiseArray(sqn, identity, 5) === NoiseArray{UInt32}(sqn, identity, 5)
+        @test NoiseArray(sqn, identity, (5,)) === NoiseArray{UInt32}(sqn, identity, (5,))
         @test eltype(NoiseArray(sqn, identity, 5)) == UInt32
 
     end
@@ -22,5 +24,26 @@
         @test_throws BoundsError A[6,1]
 
         @test_throws ArgumentError setindex!(A, zero(UInt32), 1)
+    end
+    @testset "NoiseUniform" begin
+        A = NoiseArray(SquirrelNoise5(), NoiseUniform{Float64}(), 5,5)
+
+        @test A === NoiseArray{Float64}(SquirrelNoise5(), NoiseUniform{Float64}(), 5,5)
+
+        @test typeof(A[1,1]) == Float64
+    end
+    @testset "Distributions Compat" begin
+        @testset "Bernoulli" begin
+            A = NoiseArray(SquirrelNoise5(), Bernoulli(), 5,5)
+
+            @test eltype(A) == Bool
+            @test A === NoiseArray(SquirrelNoise5(), Bernoulli(), (5,5))
+        end
+        @testset "Poisson" begin
+            A = NoiseArray(SquirrelNoise5(), Poisson(), 5,5)
+
+            @test eltype(A) == Int
+            @test A === NoiseArray(SquirrelNoise5(), Poisson(), (5,5))
+        end
     end
 end

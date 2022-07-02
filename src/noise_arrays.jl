@@ -31,16 +31,14 @@ function NoiseArray{T}(rng::R, transform::F, sz::SZ) where {R<:AbstractNoise,SZ<
     NoiseArray{T,N,R,F}(rng, transform, OneTo.(sz))
 end
 
-function NoiseArray(rng::R, transform::F, sz::Vararg{Integer,N}) where {R<:AbstractNoise} where {N,F}
+function NoiseArray(rng, transform::F, sz...) where {F}
     T = typeof(transform(noise(1,rng)))
-    NoiseArray{T,N,R,F}(rng, transform, OneTo.(sz))
+    NoiseArray{T}(rng, transform, sz...)
 end
 
-function NoiseArray(rng::R, transform::F, sz::SZ) where {R<:AbstractNoise,SZ<:Tuple{Vararg{Integer,N}}} where {N,F}
-    T = typeof(transform(noise(1,rng)))
-    NoiseArray{T,N,R,F}(rng, transform, OneTo.(sz))
+function NoiseArray(rng, transform::NoiseUniform{T}, sz...) where {T}
+    NoiseArray{T}(rng, transform, sz...)
 end
-
 
 
 @inline Base.axes(A::NoiseArray) = A.axes
@@ -54,7 +52,7 @@ Base.@propagate_inbounds @inline function getindex(A::NoiseArray{T}, i::Integer)
     convert(T, (A.transform(noise(i,A.noise))))
 end
 
-Base.@propagate_inbounds @inline function getindex(A::NoiseArray{T,N,R,NoiseConvert{T}}, i::Integer) where {T,N,R}
+Base.@propagate_inbounds @inline function getindex(A::NoiseArray{T,N,R,NoiseUniform{T}}, i::Integer) where {T,N,R}
     @boundscheck checkbounds(A,i)
     noise_convert(noise(i, A.noise), T)
 end

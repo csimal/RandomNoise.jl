@@ -14,6 +14,7 @@ Requires = "1"
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 Random123 = "74087812-796a-5b5d-8853-05524746bad3"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 
 [targets]
-test = ["Test", "Random123", "Random"]
+test = ["Test", "Random123", "Random", "Distributions"]
