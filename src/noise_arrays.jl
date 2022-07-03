@@ -4,14 +4,12 @@ import Base: axes, size, getindex, setindex!, IndexStyle, show, ==
 
 """
     NoiseArray{T,N,R,F,Axes} where {
-        R <: AbstractNoise,
         Axes <: Tuple{Vararg{AbstractUnitRange,N}}
     }
 
 An `N`-dimensional read only array of random values
 """
 struct NoiseArray{T,N,R,F,Axes} <: AbstractArray{T,N} where {
-    R <: AbstractNoise,
     Axes <: Tuple{Vararg{AbstractUnitRange,N}}
     }
     noise::R
@@ -23,11 +21,11 @@ function NoiseArray{T,N,R,F}(rng::R, transform::F, sz::Axes) where Axes<:Tuple{V
     NoiseArray{T,N,R,F,Axes}(rng, transform, sz)
 end
 
-function NoiseArray{T}(rng::R, transform::F, sz::Vararg{Integer,N}) where {R<:AbstractNoise,T,N,F}
+function NoiseArray{T}(rng::R, transform::F, sz::Vararg{Integer,N}) where {T,N,R,F}
     NoiseArray{T,N,R,F}(rng, transform, OneTo.(sz))
 end
 
-function NoiseArray{T}(rng::R, transform::F, sz::SZ) where {R<:AbstractNoise,SZ<:Tuple{Vararg{Integer,N}}} where {T,N,F}
+function NoiseArray{T}(rng::R, transform::F, sz::SZ) where {SZ<:Tuple{Vararg{Integer,N}}} where {T,N,R,F}
     NoiseArray{T,N,R,F}(rng, transform, OneTo.(sz))
 end
 
@@ -49,12 +47,7 @@ IndexStyle(::Type{<:NoiseArray}) = IndexLinear()
 
 Base.@propagate_inbounds @inline function getindex(A::NoiseArray{T}, i::Integer) where T
     @boundscheck checkbounds(A,i)
-    convert(T, (A.transform(noise(i,A.noise))))
-end
-
-Base.@propagate_inbounds @inline function getindex(A::NoiseArray{T,N,R,NoiseUniform{T}}, i::Integer) where {T,N,R}
-    @boundscheck checkbounds(A,i)
-    noise_convert(noise(i, A.noise), T)
+    noise_getindex(A.noise, A.transform, i, T)
 end
 
 @inline function setindex!(::NoiseArray{T,N}, v, k) where {T,N}
