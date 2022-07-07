@@ -6,6 +6,29 @@ A 32-bit noise function based on the Murmur3 hash function.
 
 ## Fields
 * `seed::UInt32 = 0`
+
+## Examples
+```jldoctest
+julia> m3n = Murmur3Noise()
+Murmur3Noise(0x00000000)
+
+julia> noise(0, m3n)
+0x2362f9de
+
+julia> noise(1, m3n)
+0xfbf1402a
+```
+
+```jldoctest
+julia> m3n_ = Murmur3Noise(42)
+Murmur3Noise(0x0000002a)
+
+julia> noise(0, m3n_)
+0x379fae8f
+
+julia> noise(1, m3n_)
+0xdea578e3
+```
 """
 struct Murmur3Noise <: AbstractNoise{UInt32}
     seed::UInt32
@@ -30,16 +53,16 @@ function murmur3_scramble(k::UInt32)
 end
 
 function murmur3_noise(n::UInt32, seed::UInt32)
-    h = seed
+    h::UInt32 = seed
     h ⊻= murmur3_scramble(n)
     h = (h << 13) | (h >> 19)
-    h = h * 5 + MURMUR3_BITS_3
+    h = h * UInt32(5) + MURMUR3_BITS_3
 
-    h ⊻= 4 # We're only hashing a single UInt32, so 4 bytes
-    h ⊻= h >> 16
+    h ⊻= UInt32(4) # We're only hashing a single UInt32, so 4 bytes
+    h ⊻= (h >> 16)
     h *= MURMUR3_BITS_4
-    h ⊻= h >> 13
+    h ⊻= (h >> 13)
     h *= MURMUR3_BITS_5
-    h ⊻= h >> 16
+    h ⊻= (h >> 16)
     return h
 end
