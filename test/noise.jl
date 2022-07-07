@@ -18,12 +18,11 @@
         @test noise(1, sqn1) == 0x98b75d40
     end
 
-    @testset "HashNoise" begin
-        @test HashNoise() == HashNoise(0x0000000000000000)
-        @test HashNoise(1) == HashNoise(0x0000000000000001)
+    @testset "SquirrelNoise5x2" begin
+        
+    end
 
-        hn = HashNoise()
-        @test typeof(noise(0,hn)) == UInt64
-        # NB. We don't test specific values since it depends on the implementation of Base.hash, which varies between versions.
+    @testset "Murmur3Noise" begin
+        
     end
 end
