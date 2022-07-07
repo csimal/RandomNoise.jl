@@ -55,3 +55,35 @@ const SQ5_BIT_NOISE5 = 0x1b56c4f5
 
     return mangledbits
 end
+
+"""
+    SquirrelNoise5x2 <: AbstractNoise{UInt64}
+
+A 64 bits noise function made by stacking two `SquirrelNoise5()` together.
+
+## Fields
+* `seed1::UInt32 = 0` the first seed
+* `seed2::UInt32 = 1` the second seed
+
+When constructing an instance with both seeds equal, a `DomainError` will be raised.
+"""
+struct SquirrelNoise5x2 <: AbstractNoise{UInt64}
+    seed1::UInt32
+    seed2::UInt32
+    function SquirrelNoise5x2(m,n)
+        if m == n
+            throw(DomainError((m,n),"Constructing an instance of SquirrelNoise5x2 with identical seeds ($m). This will harm the quality of the numbers generated."))
+        end
+        new(m % UInt32,n % UInt32)
+    end
+end
+
+SquirrelNoise5x2() = SquirrelNoise5x2(UInt32(0),UInt32(1))
+
+@inline function noise(n::UInt64, sqnx2::SquirrelNoise5x2)
+    # TODO use something else than Base.hash for reproducibility
+    n = Base.hash(n) # scramble the bits to avoid problems with high bits not changing much
+    r1 = squirrel_noise((n) % UInt32, sqnx2.seed1)
+    r2 = squirrel_noise((n >> 32) % UInt32, sqnx2.seed2)
+    UInt64(r1 << 32) + UInt64(r2)
+end
