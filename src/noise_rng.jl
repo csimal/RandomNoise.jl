@@ -41,7 +41,7 @@ function Base.copy!(dst::NoiseRNG{N,T}, src::NoiseRNG{N,T}) where {N,T}
 end
 
 @inline function rand(rng::NoiseRNG{N,T}, ::Type{N}) where {N<:BitTypes,T<:AbstractNoise{N}}
-    rng.counter += 1
+    rng.counter += one(T)
     noise(rng.counter-1, rng.noise)
 end
 
