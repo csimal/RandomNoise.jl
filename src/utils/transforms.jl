@@ -3,9 +3,7 @@
     convert(T, transform(noise(i, rng)))
 end
 
-@inline function noise_getindex(rng, transform, i::Integer)
-    transform(noise(i, rng))
-end
+@inline noise_getindex(rng, transform, i::Integer) = transform(noise(i, rng))
 
 """
     NoiseUniform{T}
