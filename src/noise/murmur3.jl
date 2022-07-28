@@ -20,13 +20,13 @@ julia> noise(1, m3n)
 ```
 
 ```jldoctest
-julia> m3n_ = Murmur3Noise(42)
+julia> m3n = Murmur3Noise(42)
 Murmur3Noise(0x0000002a)
 
-julia> noise(0, m3n_)
+julia> noise(0, m3n)
 0x379fae8f
 
-julia> noise(1, m3n_)
+julia> noise(1, m3n)
 0xdea578e3
 ```
 """
