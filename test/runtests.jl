@@ -10,5 +10,5 @@ using Test
     include("random123.jl")
     include("convert.jl")
     include("noise_rng.jl")
-    include("noise_arrays.jl")
+    include("noise_maps.jl")
 end

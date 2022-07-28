@@ -21,9 +21,7 @@ include("noise_rng.jl")
 export NoiseRNG
 
 include("utils/transforms.jl")
-include("noise_arrays.jl")
 export NoiseUniform
-export NoiseArray
 
 using Requires
 
