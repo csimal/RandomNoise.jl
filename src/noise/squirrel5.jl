@@ -66,6 +66,18 @@ A 64 bits noise function made by stacking two `SquirrelNoise5()` together.
 * `seed2::UInt32 = 1` the second seed
 
 When constructing an instance with both seeds equal, a `DomainError` will be raised.
+
+## Examples
+```jldoctest
+julia> sqnx2 = SquirrelNoise5x2()
+SquirrelNoise5x2(0x00000000, 0x00000001)
+
+julia> noise(0, sqnx2)
+0x000000009de55491
+
+julia> noise(1, sqnx2)
+0x000000004b182c2c
+```
 """
 struct SquirrelNoise5x2 <: AbstractNoise{UInt64}
     seed1::UInt32
