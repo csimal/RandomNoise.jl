@@ -19,10 +19,19 @@
     end
 
     @testset "SquirrelNoise5x2" begin
-        
+        @test SquirrelNoise5x2() == SquirrelNoise5x2(0,1)
+        @test_throws DomainError SquirrelNoise5x2(0,0)
     end
 
     @testset "Murmur3Noise" begin
-        
+        @test Murmur3Noise() == Murmur3Noise(0x00000000)
+        @test Murmur3Noise(1) == Murmur3Noise(0x00000001)
+
+        m3n = Murmur3Noise()
+        @test typeof(noise(0, m3n)) == UInt32
+        @test noise(0x00000000, m3n) == 0x2362f9de
+        @test noise(0, m3n) == noise(0x00000000, m3n)
+        @test noise(0x00000001, m3n) == 0xfbf1402a
+        @test noise(1, m3n) == noise(0x00000001, m3n)
     end
 end
