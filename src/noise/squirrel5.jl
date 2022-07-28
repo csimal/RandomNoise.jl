@@ -73,10 +73,10 @@ julia> sqnx2 = SquirrelNoise5x2()
 SquirrelNoise5x2(0x00000000, 0x00000001)
 
 julia> noise(0, sqnx2)
-0x000000009de55491
+0xd40e6352d9ba8dce
 
 julia> noise(1, sqnx2)
-0x000000004b182c2c
+0x0f9b5434d68ee534
 ```
 """
 struct SquirrelNoise5x2 <: AbstractNoise{UInt64}
@@ -93,9 +93,11 @@ end
 SquirrelNoise5x2() = SquirrelNoise5x2(UInt32(0),UInt32(1))
 
 @inline function noise(n::UInt64, sqnx2::SquirrelNoise5x2)
-    # TODO use something else than Base.hash for reproducibility
-    n = Base.hash(n) # scramble the bits to avoid problems with high bits not changing much
-    r1 = squirrel_noise((n) % UInt32, sqnx2.seed1)
-    r2 = squirrel_noise((n >> 32) % UInt32, sqnx2.seed2)
-    UInt64(r1 << 32) + UInt64(r2)
+    n1 = n % UInt32
+    n2 = (n >> 32) % UInt32
+    # scramble the bits to avoid problems with high bits not changing much
+    n3 = squirrel_noise(n1 + n2, 0x00000000)
+    r1 = squirrel_noise(n3, sqnx2.seed1)
+    r2 = squirrel_noise(n3, sqnx2.seed2)
+    (UInt64(r1) << 32) + UInt64(r2)
 end

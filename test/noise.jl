@@ -21,6 +21,11 @@
     @testset "SquirrelNoise5x2" begin
         @test SquirrelNoise5x2() == SquirrelNoise5x2(0,1)
         @test_throws DomainError SquirrelNoise5x2(0,0)
+
+        sqn = SquirrelNoise5x2()
+        @test typeof(noise(0, sqn)) == UInt64
+        @test noise(0, sqn) == 0xd40e6352d9ba8dce
+        @test noise(1, sqn) == 0x0f9b5434d68ee534
     end
 
     @testset "Murmur3Noise" begin
