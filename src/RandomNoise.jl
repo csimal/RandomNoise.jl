@@ -1,6 +1,30 @@
 module RandomNoise
 
-include("noise/AbstractNoise.jl")
+"""
+    AbstractNoise{T}
+
+Supertype for random noise functions. `T` indicates the return type.
+"""
+abstract type AbstractNoise{T} end
+
+"""
+    noise(n, noise::AbstractNoise)
+
+Compute noise function `noise` at position `n`.
+
+## Examples
+```jldoctest
+julia> sqn = SquirrelNoise5()
+SquirrelNoise5(0x00000000)
+
+julia> noise(5, sqn)
+0x933e65af
+```
+"""
+function noise(n::Integer, nf::AbstractNoise{T}) where {T<:Integer}
+    noise(n % T, nf)
+end
+
 
 export AbstractNoise
 export noise
@@ -21,13 +45,20 @@ include("noise_rng.jl")
 export NoiseRNG
 
 include("utils/transforms.jl")
+
 export NoiseUniform
+
+using Random123
+
+include("noise/random123.jl")
+export ThreefryNoise, PhiloxNoise
+@static if Random123.R123_USE_AESNI
+    export AESNINoise, ARSNoise
+end
 
 using Requires
 
 function __init__()
-    # Optional wrappers around Random123's CBRNGs.
-    @require Random123="74087812-796a-5b5d-8853-05524746bad3" include("random123.jl")
     
     # Optional support for Distributions
     @require Distributions="31c24e10-a181-5473-b8eb-7969acd0382f" include("distributions.jl")
