@@ -25,6 +25,10 @@ function noise(n::Integer, nf::AbstractNoise{T}) where {T<:Integer}
     noise(n % T, nf)
 end
 
+function noise(n, nf::AbstractNoise{T}) where {T}
+    noise(_convert(n, T), nf)
+end
+
 
 export AbstractNoise
 export noise
