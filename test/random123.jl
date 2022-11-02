@@ -4,13 +4,13 @@
         @testset "Threefry2x" begin
             local tf = Threefry2x()
             local tfn = ThreefryNoise(tf)
-            @test typeof(noise(0,tfn)) == UInt128
-            @test noise(1, tfn) == rand(tf, UInt128)
+            @test typeof(noise(0,tfn)) == Tuple{UInt64,UInt64}
+            @test noise(0, tfn) == rand(tf, Tuple{UInt64,UInt64})
         end
         @testset "Threefry4x" begin
             local tf = Threefry4x()
             local tfn = ThreefryNoise(tf)
-            @test typeof(noise(0,tfn)) == UInt128
+            @test typeof(noise(0,tfn)) == NTuple{4,UInt64}
         end
     end
     @testset "PhiloxNoise" begin
