@@ -1,4 +1,3 @@
-using Base.Libc: calloc
 
 # Convert an integer type to a tuple of integers while keeping as many bits as possible.
 # The evil pointer fiddling is to make it very fast, as creating new tuples is slower
