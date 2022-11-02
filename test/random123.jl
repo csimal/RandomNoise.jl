@@ -1,19 +1,37 @@
 
 @testset "Random123" begin
-    @testset "Threefry2x" begin
-        local rng = Threefry2x()
-        @test typeof(noise(0,rng)) == UInt64
+    @testset "ThreefryNoise" begin
+        @testset "Threefry2x" begin
+            local tf = Threefry2x()
+            local tfn = ThreefryNoise(tf)
+            @test typeof(noise(0,tfn)) == UInt128
+            @test noise(1, tfn) == rand(tf, UInt128)
+        end
+        @testset "Threefry4x" begin
+            local tf = Threefry4x()
+            local tfn = ThreefryNoise(tf)
+            @test typeof(noise(0,tfn)) == UInt128
+        end
     end
-    @testset "Threefry4x" begin
-        local rng = Threefry4x()
-        @test typeof(noise(0, rng)) == UInt64
+    @testset "PhiloxNoise" begin
+        
     end
-    @testset "Philox2x" begin
-        local rng = Philox2x()
-        @test typeof(noise(0,rng)) == UInt64
-    end
-    @testset "Philox4x" begin
-        local rng = Philox4x()
-        @test typeof(noise(0,rng)) == UInt64
+    if Random123.R123_USE_AESNI
+        @testset "AESNINoise" begin
+            @testset "AESNI1x" begin
+                local aesni = AESNI1x()
+                local an = AESNINoise(aesni)
+                @test typeof(noise(0,an)) == UInt128
+                @test noise(1,an) == rand(aesni, UInt128)
+            end
+        end
+        @testset "ARSNoise" begin
+            @testset "ARS1x" begin
+                local ars = ARS1x()
+                local arsn = ARSNoise(ars)
+                @test typeof(noise(0, arsn)) == UInt128
+                @test noise(1, arsn) == rand(ars, UInt128)
+            end
+        end
     end
 end
