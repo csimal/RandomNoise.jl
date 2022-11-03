@@ -40,8 +40,8 @@
             @testset "ARS1x" begin
                 local ars = ARS1x()
                 local arsn = ARSNoise(ars)
-                @test typeof(noise(0, arsn)) == UInt128
-                @test noise(1, arsn) == rand(ars, UInt128)
+                @test typeof(noise(0, arsn)) == Tuple{UInt128}
+                @test noise(1, arsn) == rand(ars, Tuple{UInt128})
             end
         end
     end
