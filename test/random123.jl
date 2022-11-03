@@ -14,7 +14,18 @@
         end
     end
     @testset "PhiloxNoise" begin
-        
+        @testset "Philox2x" begin
+            local ph = Philox2x()
+            local phn = PhiloxNoise(ph)
+            @test typeof(noise(0, phn)) == NTuple{2,UInt64}
+            @test noise(0, phn) == rand(ph, NTuple{2,UInt64})
+        end
+        @testset "Philox4x" begin
+            local ph = Philox4x()
+            local phn = PhiloxNoise(ph)
+            @test typeof(noise(0, phn)) == NTuple{4,UInt64}
+            @test noise(0, phn) == rand(ph, NTuple{4,UInt64})
+        end
     end
     if Random123.R123_USE_AESNI
         @testset "AESNINoise" begin

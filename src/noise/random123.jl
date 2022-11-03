@@ -14,12 +14,16 @@ end
 
 
 
-struct PhiloxNoise{N,T,R} <: AbstractNoise{NTuple{N,T}}
-    key::NTuple{N,T}
+struct PhiloxNoise{N,T,R,K} <: AbstractNoise{NTuple{N,T}}
+    key::K
 end
 
-PhiloxNoise(ph::Philox2x{T,R}) where {T,R} = PhiloxNoise{1,T,R}(get_key(ph))
-PhiloxNoise(ph::Philox4x{T,R}) where {T,R} = PhiloxNoise{2,T,R}(get_key(ph))
+PhiloxNoise(ph::Philox2x{T,R}) where {T,R} = let k = get_key(ph)
+    PhiloxNoise{2,T,R, typeof(k)}(k)
+end 
+PhiloxNoise(ph::Philox4x{T,R}) where {T,R} = let k = get_key(ph)
+    PhiloxNoise{4,T,R, typeof(k)}(k)
+end 
 
 @inline function noise(n::NTuple{N,T}, ph::PhiloxNoise{N,T,R}) where {N,T,R}
     philox(ph.key, n, Val(R))

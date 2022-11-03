@@ -4,6 +4,15 @@
 begin
     local int_types = [Int8, Int16, Int32, Int64, Int128]
     local uint_types = [UInt8, UInt16, UInt32, UInt64, UInt128]
+    for i in eachindex(uint_types)
+        U = uint_types[i] |> Symbol
+        I = int_types[i] |> Symbol
+        @eval begin
+            @inline function _to_bits(n::Union{$I,$U})::$U
+                n % $U
+            end
+        end
+    end
     for i in 1:length(uint_types)-1, j in i+1:length(uint_types)
         U = uint_types[i] |> Symbol
         I = int_types[i] |> Symbol
@@ -13,19 +22,20 @@ begin
             @inline function _to_bits(n::NTuple{$N,S})::$T where {S <: Union{$U,$I}}
                 unsafe_load(Ptr{$T}(pointer_from_objref(Ref(n))))
             end
-            @inline function _to_bits(n::Union{$I,$U})::$U
-                n % $U
-            end
             @inline function _convert(n::Integer, ::Type{NTuple{$N,$U}})
                 unsafe_load(Ptr{NTuple{$N,$U}}(pointer_from_objref(Ref(n % $T))))
             end
-            @inline function _convert(n::NTuple{$N,<:Integer}, ::Type{S})::S where {S<:Integer}
-                _to_bits(n) % S
-            end
+            
         end
     end
     @inline function _convert(n::Union{Int64,UInt64}, ::Type{NTuple{4,UInt64}})::NTuple{4,UInt64}
         (n % UInt64, zero(UInt64), zero(UInt64), zero(UInt64))
+    end
+    @inline function _convert(n::Integer, ::Type{Tuple{T}}) where T <: Integer
+        (n % T,)
+    end
+    @inline function _convert(n::NTuple{N,<:Integer}, ::Type{S})::S where {N,S<:Integer}
+        _to_bits(n) % S
     end
 end
 
