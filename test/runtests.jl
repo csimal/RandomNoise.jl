@@ -3,6 +3,7 @@ using Random123
 using Random
 using Distributions
 using Test
+using Aqua
 
 @testset "RandomNoise.jl" begin
     include("pairing_functions.jl")
@@ -11,4 +12,6 @@ using Test
     include("convert.jl")
     include("noise_rng.jl")
     include("noise_maps.jl")
+    include("transforms.jl")
+    Aqua.test_all(RandomNoise)
 end
