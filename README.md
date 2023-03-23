@@ -18,7 +18,7 @@ SquirrelNoise5(0x00000000)
 julia> noise(1, sqn)
 0xc895cb1d
 ```
-Additionally, most noise functions can be provided with a seed.
+Additionally, most noise functions can be provided with a seed. Unlike PRNGs, this generates a completely different sequence, rather than jumping at a different point in the same sequence.
 ```julia-repl
 julia> sqn = SquirrelNoise5(42)
 SquirrelNoise5(0x0000002a)
@@ -33,7 +33,7 @@ RandomNoise.jl currently provides two noise functions
 * `SquirrelNoise5x2` a 64-bit noise function, consisting of two stacked `SquirrelNoise5`
 * `Murmur3Noise` a 32-bit noise function based on the Murmur3 hash function
 
-In addition,  support for Random123.jl's CBRNGs is provided via immutable wrapper type. So both RandomNoise and Random123 need to be loaded to use them.
+In addition, support for [Random123.jl](https://github.com/JuliaRandom/Random123.jl)'s CBRNGs is provided via immutable wrapper types. Both RandomNoise and Random123 need to be loaded to use them.
 
 ```julia
 using RandomNoise
@@ -43,7 +43,7 @@ rng = Threefry2x()
 tfn = ThreefryNoise(rng)
 noise(0, tfn)
 ```
-The noise functions implemented in this package are more lightweight, but have yet to be rigorously tested. Use the ones from `Random123` if you want some battle-tested generators.
+The noise functions implemented in this package are more lightweight, but have yet to be rigorously tested. Use the ones from Random123 if you want some battle-tested generators.
 
 ## Using noise functions in `rand()`
 Any noise function can be used as a sequential PRNG simply by creating a counter and incrementing it each time a new number is generated. Examples of such *Counter Based RNGs* (CBRNGs) can be found in the [Random123.jl](https://github.com/JuliaRandom/Random123.jl) package.
@@ -72,5 +72,5 @@ Noise Functions/CBRNGs on the other hand, work by applying a bit-scrambling map 
 These solve a lot of the problems with traditional PRNGs. They have no mutable state, and the sequence of numbers can be accessed out of order and at constant cost, making them ideal for parallel workflows. Furthermore, because the sequence of numbers can be accessed out of order, this removes the need to store them in memory for performance.
 
 
-## BigCrush benchmarks
+## Benchmarks
 TODO
