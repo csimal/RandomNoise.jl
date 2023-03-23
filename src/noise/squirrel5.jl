@@ -96,6 +96,13 @@ SquirrelNoise5x2() = SquirrelNoise5x2(UInt32(0),UInt32(1))
     n1 = n % UInt32
     n2 = (n >> 32) % UInt32
     # scramble the bits to avoid problems with high bits not changing much
+    #= alternative:
+    r1 = squirrel_noise(n1, sqnx2.seed1)
+    r2 = squirrel_noise(n1, sqnx2.seed2)
+    r3 = squirrel_noise(n2, sqnx2.seed1)
+    r4 = squirrel_noise(n2, sqnx2.seed2)
+    r5 = r1 ⊻ r2; r6 = r3 ⊻ r4
+    =#
     n3 = squirrel_noise(n1 + n2, 0x00000000)
     r1 = squirrel_noise(n3, sqnx2.seed1)
     r2 = squirrel_noise(n3, sqnx2.seed2)
