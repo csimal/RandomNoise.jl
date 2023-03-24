@@ -1,6 +1,11 @@
+using Pkg
+Pkg.activate(".")
+
 using RandomNoise
 using Random
 using RNGTest
+
+
 
 include("utils.jl")
 

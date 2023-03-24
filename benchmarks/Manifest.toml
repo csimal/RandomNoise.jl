@@ -1,6 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.5"
+julia_version = "1.8.2"
 manifest_format = "2.0"
 project_hash = "a89f3509b03439106acba0979ea0024df5995ecd"
 
@@ -47,7 +47,7 @@ version = "4.6.0"
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "1.0.1+0"
+version = "0.5.2+0"
 
 [[deps.DataAPI]]
 git-tree-sha1 = "e8119c1a33d267e16108be441a287a6981ba1630"
@@ -286,9 +286,9 @@ version = "1.6.0"
 
 [[deps.RandomNoise]]
 deps = ["Random", "Random123", "Requires"]
-git-tree-sha1 = "9e1a71dd780700f6efe2de8ffe41c4e8a3177be2"
+git-tree-sha1 = "dacb8f0c475e0ac039d5bd4b4cd8401d81e2e385"
 repo-rev = "main"
-repo-url = ".."
+repo-url = "https://github.com/csimal/RandomNoise.jl.git"
 uuid = "cdc879b2-80b7-4333-9dca-dc35859d33da"
 version = "0.1.0"
 

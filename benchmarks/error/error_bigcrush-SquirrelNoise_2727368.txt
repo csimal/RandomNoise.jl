@@ -1,0 +1,27 @@
+  Activating project at `~/.julia/dev/RandomNoise/benchmarks`
+
+========= Summary results of BigCrush =========
+
+ Version:          TestU01 1.2.3
+ Generator:        
+ Number of statistics:  160
+ Total CPU time:   04:28:42.82
+ The following tests gave p-values outside [0.001, 0.9990]:
+ (eps  means a value < 1.0e-300):
+ (eps1 means a value < 1.0e-15):
+
+       Test                          p-value
+ ----------------------------------------------
+ 34  Gap, r = 0                     1.1e-16
+ 35  Gap, r = 25                      eps  
+ 36  Gap, r = 0                       eps  
+ 37  Gap, r = 20                      eps  
+ 46  MaxOft, t = 8                  1 - eps1
+ 47  MaxOft, t = 16                 1 - eps1
+ 48  MaxOft, t = 24                 1 - eps1
+ 49  MaxOft, t = 32                 1 - eps1
+ ----------------------------------------------
+ All other tests were passed
+
+
+
