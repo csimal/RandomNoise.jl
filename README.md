@@ -73,4 +73,5 @@ These solve a lot of the problems with traditional PRNGs. They have no mutable s
 
 
 ## Benchmarks
-TODO
+
+The `SquirrelNoise5`, `SquirrelNoise5x2` and `Murmur3Noise` were tested with the BigCrush benchmark from [RNGTest](https://github.com/JuliaRandom/RNGTest.jl). Both variants of SquirrelNoise5 fail 8 tests (Gap and MaxOft), while Murmur3Noise fails 10 (BirthdaySpacings, Gap, MaxOft and SumCollector). See `benchmarks/results` for more details.
