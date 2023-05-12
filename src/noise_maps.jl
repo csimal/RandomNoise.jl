@@ -26,18 +26,15 @@ NoiseMap(rng, dim::Integer) = NoiseMap(rng, identity, dim)
 @inline (nm::NoiseMap)(n::Integer) = noise_getindex(nm.noise, nm.transform, n)
 
 @inline (nm::NoiseMap{T,2})(a, b) where T = nm(pairing2(a,b))
+@inline (nm::NoiseMap{T,3})(a, b, c) where T = nm(pairing3(a,b,c))
+@inline (nm::NoiseMap{T,4})(a, b, c, d) where T = nm(pairing4(a,b,c,d))
+@inline (nm::NoiseMap{T,5})(a,b,c,d,e) where T = nm(pairing5(a,b,c,d,e))
+@inline (nm::NoiseMap{T,6})(a,b,c,d,e,f) where T = nm(pairing6(a,b,c,d,e,f))
+@inline (nm::NoiseMap{T,7})(a,b,c,d,e,f,g) where T = nm(pairing7(a,b,c,d,e,f,g))
+@inline (nm::NoiseMap{T,8})(a,b,c,d,e,f,g,h) where T = nm(pairing8(a,b,c,d,e,f,g,h))
 
-(nm::NoiseMap{T,3})(a, b, c) where T = nm(pairing3(a,b,c))
+@inline (nm::NoiseMap)(idx::Tuple{Vararg{Integer,N}}) where N = nm(idx...)
 
-(nm::NoiseMap{T,4})(a, b, c, d) where T = nm(pairing4(a,b,c,d))
+@inline (nm::NoiseMap)(idx...) = nm(pairing(idx...))
 
-(nm::NoiseMap{T,5})(a,b,c,d,e) where T = nm(pairing5(a,b,c,d,e))
-(nm::NoiseMap{T,6})(a,b,c,d,e,f) where T = nm(pairing6(a,b,c,d,e,f))
-(nm::NoiseMap{T,7})(a,b,c,d,e,f,g) where T = nm(pairing7(a,b,c,d,e,f,g))
-(nm::NoiseMap{T,8})(a,b,c,d,e,f,g,h) where T = nm(pairing8(a,b,c,d,e,f,g,h))
-
-(nm::NoiseMap)(idx::Tuple{Vararg{Integer,N}}) where N = nm(idx...)
-
-(nm::NoiseMap)(idx...) = nm(pairing(idx...))
-
-getindex(nm::NoiseMap, idx...) = nm(idx...)
+@inline getindex(nm::NoiseMap, idx...) = nm(idx...)
