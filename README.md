@@ -43,7 +43,7 @@ rng = Threefry2x()
 tfn = ThreefryNoise(rng)
 noise(0, tfn)
 ```
-The noise functions implemented in this package are more lightweight, but have yet to be rigorously tested. Use the ones from Random123 if you want some battle-tested generators.
+The noise functions implemented in this package are more lightweight, but fail all fail some tests on BigCrush (see Benchmarks below). Use the ones from Random123 if you want some battle-tested generators.
 
 ## Using noise functions in `rand()`
 Any noise function can be used as a sequential PRNG simply by creating a counter and incrementing it each time a new number is generated. Examples of such *Counter Based RNGs* (CBRNGs) can be found in the [Random123.jl](https://github.com/JuliaRandom/Random123.jl) package.
