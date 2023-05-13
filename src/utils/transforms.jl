@@ -1,9 +1,9 @@
 
-@inline function noise_getindex(rng, transform, i::Integer, ::Type{T}) where T
+@inline function noise_getindex(rng::AbstractNoise, transform, i, ::Type{T}) where T
     convert(T, transform(noise(i, rng)))
 end
 
-@inline noise_getindex(rng, transform, i::Integer) = transform(noise(i, rng))
+@inline noise_getindex(rng::AbstractNoise, transform, i) = transform(noise(i, rng))
 
 """
     NoiseUniform{T}
@@ -14,4 +14,4 @@ For floating point numbers, the values are uniformly distributed in the interval
 """
 struct NoiseUniform{T<:AbstractFloat} end
 
-@inline noise_getindex(rng, ::NoiseUniform{T}, i::Integer) where T = noise_convert(noise(i,rng), T)
+@inline noise_getindex(rng::AbstractNoise, ::NoiseUniform{T}, i) where T = noise_convert(noise(i,rng), T)

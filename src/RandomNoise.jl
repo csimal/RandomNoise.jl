@@ -38,11 +38,6 @@ include("noise/murmur3.jl")
 
 export SquirrelNoise5, SquirrelNoise5x2, Murmur3Noise
 
-include("utils/pairing_functions.jl")
-include("noise_maps.jl")
-
-export NoiseMap
-
 include("utils/convert.jl")
 include("noise_rng.jl")
 
@@ -51,6 +46,11 @@ export NoiseRNG
 include("utils/transforms.jl")
 
 export NoiseUniform
+
+include("utils/pairing_functions.jl")
+include("noise_maps.jl")
+
+export NoiseMap
 
 using Random123
 

@@ -5,23 +5,38 @@ import Base: getindex
 
 An `N`-dimensional infinite stream of random values.
 
-This works exactly like `NoiseArray` but has no bounds.
+# Fields
+- `noise` an noise function used to generate the base stream of random numbers
+- `transform` a function that is applied to the output of the noise function to obtain the result
+
+Transforms can be
+- Arbitrary functions
+- An instance of `NoiseUniform`, in which case, the values are floating point numbers uniformly distributed in the interval [0,1).
+- An instance of `Distributions.UnivariateDistribution`, in which case the values are samples from that distribution.
+
+# Examples
+```jldoctest
+julia> nm = NoiseMap(sqn)
+NoiseMap{UInt32, 1, SquirrelNoise5, typeof(identity)}(SquirrelNoise5(0x00000000), identity)
+```
 """
-struct NoiseMap{T,N,R,F}
+struct NoiseMap{T,N,R<:AbstractNoise,F}
     noise::R
     transform::F
 end
 
 NoiseMap{T,N}(rng::R, transform::F) where {T,N,R,F} = NoiseMap{T,N,R,F}(rng, transform)
 
-NoiseMap{T}(rng::R, transform::F, N::Integer) where {T,R,F} = NoiseMap{T,N,R,F}(rng, transform)
+NoiseMap{T}(rng::R, transform::F, N::Integer = 1) where {T,R,F} = NoiseMap{T,N,R,F}(rng, transform)
 
-function NoiseMap(rng::R, transform::F, dim::Integer) where {R,F}
+function NoiseMap(rng::R, transform::F, N::Integer = 1) where {R,F}
     T = typeof(transform(noise(1, rng)))
-    NoiseMap{T,dim,R,F}(rng, transform)
+    NoiseMap{T,N,R,F}(rng, transform)
 end
 
-NoiseMap(rng, dim::Integer) = NoiseMap(rng, identity, dim)
+NoiseMap(rng, dim::Integer = 1) = NoiseMap(rng, identity, dim)
+
+NoiseMap(rng::R, t::NoiseUniform{T}, N::Integer = 1) where {R,T} = NoiseMap{T,N,R,NoiseUniform{T}}(rng, t)
 
 @inline (nm::NoiseMap)(n::Integer) = noise_getindex(nm.noise, nm.transform, n)
 

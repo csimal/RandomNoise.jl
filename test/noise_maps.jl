@@ -4,10 +4,13 @@ using RandomNoise: pairing, pairing2, pairing3, pairing4, pairing5, pairing5, pa
     @testset "Constructors" begin
         sqn = SquirrelNoise5()
 
+        @test NoiseMap(sqn) == NoiseMap(sqn, identity, 1)
         @test typeof(NoiseMap(sqn, 2)) == NoiseMap{UInt32,2,SquirrelNoise5,typeof(identity)}
         @test NoiseMap(sqn, 2) === NoiseMap(sqn, identity, 2)
         @test NoiseMap(sqn, identity, 2) === NoiseMap{UInt32}(sqn, identity, 2)
         @test NoiseMap(sqn, identity, 2) === NoiseMap{UInt32,2}(sqn, identity)
+        @test typeof(NoiseMap(sqn, sin)) == NoiseMap{Float64,1,SquirrelNoise5,typeof(sin)}
+        @test typeof(NoiseMap(sqn, NoiseUniform{Float64}())) == NoiseMap{Float64,1,SquirrelNoise5,NoiseUniform{Float64}}
     end
     @testset "Indexing" begin
         @testset "1D Indexing" begin
