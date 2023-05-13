@@ -120,6 +120,7 @@ end
 
     ARSNoise(a::ARS4x{R}) where R = ARSNoise{4,R,UInt32}(get_key(a))
 
-    @inline noise(n::NTuple{N,T}, r::ARSNoise{N,R,T}) where {N,R,T} = ars(r.key, n, Val(R))
+    @inline noise(n::NTuple{N,T}, r::ARSNoise{N,R,T}) where {N,R,T} = _convert(ars(r.key, tuple(_to_bits(n)), Val(R))[1], NTuple{N,T})
+    @inline noise(n::Integer, r::ARSNoise{N,R,T}) where {N,R,T} = _convert(ars(r.key, tuple(n % UInt128), Val(R))[1], NTuple{N,T})
 
 end

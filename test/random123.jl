@@ -43,6 +43,14 @@
                 @test typeof(noise(0, arsn)) == Tuple{UInt128}
                 @test noise(1, arsn) == rand(ars, Tuple{UInt128})
             end
+            @testset "ARS4x" begin
+                local ars = ARS4x()
+                local arsn = ARSNoise(ars)
+                x = UInt32.((0,1,2,3))
+                @test typeof(noise(x, arsn)) == NTuple{4,UInt32}
+                # ???
+                @test noise(0, arsn) == rand(ars, NTuple{4,UInt32})
+            end
         end
     end
 end
