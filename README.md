@@ -18,7 +18,9 @@ SquirrelNoise5(0x00000000)
 julia> noise(1, sqn)
 0xc895cb1d
 ```
+
 Additionally, most noise functions can be provided with a seed. Unlike PRNGs, this generates a completely different sequence, rather than jumping at a different point in the same sequence.
+
 ```julia-repl
 julia> sqn = SquirrelNoise5(42)
 SquirrelNoise5(0x0000002a)
@@ -28,7 +30,7 @@ julia> noise(1, sqn)
 ```
 
 ## Noise functions implemented in this package
-RandomNoise.jl currently provides two noise functions
+RandomNoise.jl currently provides three noise functions
 * `SquirrelNoise5` a 32-bit noise function, originally by [Squirrel Eiserloh](https://pastebin.com/dVZcMJJQ)
 * `SquirrelNoise5x2` a 64-bit noise function, consisting of two stacked `SquirrelNoise5`
 * `Murmur3Noise` a 32-bit noise function based on the Murmur3 hash function
@@ -43,7 +45,68 @@ rng = Threefry2x()
 tfn = ThreefryNoise(rng)
 noise(0, tfn)
 ```
-The noise functions implemented in this package are more lightweight, but fail all fail some tests on BigCrush (see Benchmarks below). Use the ones from Random123 if you want some battle-tested generators.
+The noise functions implemented in this package are more lightweight, but all fail some tests on BigCrush (see Benchmarks below). Use the ones from Random123 if you want some battle-tested generators.
+
+## Noise Maps
+
+Being able to generate random integers on demand is all well and good, but most of the time we'd like to use other types of random values, floating point numbers, for example. For this purpose, we provide a special type called `NoiseMap` that wraps around a noise function and a transform that maps the output of the noise function to some desired values.
+
+```julia-repl
+julia> nm = NoiseMap(SquirrelNoise5(), sin)
+NoiseMap{Float64, 1, SquirrelNoise5, typeof(sin)}(SquirrelNoise5(0x00000000), sin)
+```
+The resulting object can called just like any function
+
+```julia-repl
+julia> nm(1)
+0.013299689581968843
+
+julia> nm.(1:5)
+5-element Vector{Float64}:
+  0.013299689581968843
+  0.9728924552038383
+ -0.9468531800274045
+ -0.5680157365140597
+ -0.03113989875496316
+```
+
+It can also be indexed like an array
+
+```julia-repl
+julia> nm[1]
+0.013299689581968843
+```
+
+By default, noise maps are "one-dimensional", but can be defined for arbitrary dimensions
+
+```julia-repl
+julia> nm2 = NoiseMap(SquirrelNoise5(), sin, 2)
+NoiseMap{Float64, 2, SquirrelNoise5, typeof(sin)}(SquirrelNoise5(0x00000000), sin)
+
+julia> nm2(1,1)
+0.013299689581968843
+```
+Beside a function, the transform can also be an instance of `NoiseUniform`, a special type to generate floating point numbers uniformly distributed in the interval `[0,1)`.
+
+```julia-repl
+julia> nm3 = NoiseMap(SquirrelNoise5(), NoiseUniform{Float64}())
+NoiseMap{Float64, 1, SquirrelNoise5, NoiseUniform{Float64}}(SquirrelNoise5(0x00000000), NoiseUniform{Float64}())
+```
+
+Finally, when passing a `UnivariateDistribution` from [Distributions.jl](https://juliastats.org/Distributions.jl/stable/), the output values are samples from that distribution
+
+```julia-repl
+julia> nm4 = NoiseMap(SquirrelNoise5(), Normal(0,1))
+NoiseMap{Float64, 1, SquirrelNoise5, Normal{Float64}}(SquirrelNoise5(0x00000000), Normal{Float64}(μ=0.0, σ=1.0))
+
+julia> nm4.(1:5)
+5-element Vector{Float64}:
+ 0.7841899388190731
+ 0.5263725651428768
+ 0.14096081624298265
+ 0.6549392209760272
+ 0.18955444371040095 
+```
 
 ## Using noise functions in `rand()`
 Any noise function can be used as a sequential PRNG simply by creating a counter and incrementing it each time a new number is generated. Examples of such *Counter Based RNGs* (CBRNGs) can be found in the [Random123.jl](https://github.com/JuliaRandom/Random123.jl) package.
@@ -58,18 +121,19 @@ julia> rand(rng)
 ```
 Note: Since Random123.jl already defines `rand` for it's CBRNGs, we do not support passing them to `NoiseRNG`.
 
+
 ---
 ## Noise functions vs PRNGs
 
-This GDC 2017 [talk](https://www.youtube.com/watch?v=LWFzPP8ZbdU) by Squirrel Eiserloh is an excellent introduction to noise functions.
+This [GDC 2017 talk](https://www.youtube.com/watch?v=LWFzPP8ZbdU) by Squirrel Eiserloh is an excellent introduction to noise functions and their practical applications.
 
-Traditional Pseudo Random Number Generators (PRNGs) work by repeatedly applying a map that scrambles the bits of its inputs, starting from a given seed, so that when generating a sequence of pseudorandom numbers, the `n`-th term is to result of applying that map `n` times to the seed.
+Traditional Pseudo Random Number Generators (PRNGs) work by repeatedly applying a map that scrambles the bits of its inputs, starting from a given seed, so that when generating a sequence of pseudorandom numbers, the `n`-th term is the result of applying that map `n` times to the seed.
 
-This has several downsides. First, PRNGs need to hold a state that gets mutated every time a new number is generated, making them ill-suited to parallel workflows. Second, the generated numbers can only be computed in order, so if one wants to access a sequence of pseudorandom numbers out of order, the best way is often to just store it in memory.
+This has several downsides. First, PRNGs need to hold a state that gets mutated every time a new number is generated, making them ill-suited to parallel workflows. Second, the generated numbers can only be computed in order, so if one wants to access a sequence of pseudorandom numbers out of order, the best way is often to just store it in memory. A third downside is that changing the seed of the generator usually just jumps to a different point in the sequence, so when using multiple seeds in parallel, it's possible for two generators to synchronize with each other.
 
 Noise Functions/CBRNGs on the other hand, work by applying a bit-scrambling map once. That is, the `n`-th number in the sequence is computed by `noise(n)`.
 
-These solve a lot of the problems with traditional PRNGs. They have no mutable state, and the sequence of numbers can be accessed out of order and at constant cost, making them ideal for parallel workflows. Furthermore, because the sequence of numbers can be accessed out of order, this removes the need to store them in memory for performance.
+These solve a lot of the problems with traditional PRNGs. They have no mutable state, and the sequence of numbers can be accessed out of order and at constant cost, making them ideal for parallel workflows. Furthermore, because the sequence of numbers can be accessed out of order, this removes the need to store them in memory for performance. Lastly, changing the seed of a noise function generates a completely different sequence, which means that we don't run into the problem of different generators catching up with each other.
 
 
 ## Benchmarks
