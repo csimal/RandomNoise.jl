@@ -16,7 +16,14 @@ const bit_types = [Bool, UInt8, UInt16, UInt32, UInt64, UInt128, Int8, Int16, In
         @test copy(rng) == rng
         @test copy!(copy(rng), rng) == rng
     end
-    
+    @testset "SquirrelNoise5x2 RNG" begin
+        local rng = NoiseRNG(SquirrelNoise5x2())
+
+        @test typeof(rand(rng)) == Float64
+
+        @test copy(rng) == rng
+        @test copy!(copy(rng), rng) == rng
+    end
     @testset "Bit types RNG" begin
         local rng1 = NoiseRNG(SquirrelNoise5())
         #local rng2 = NoiseRNG(HashNoise())
