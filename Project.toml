@@ -1,7 +1,7 @@
 name = "RandomNoise"
 uuid = "cdc879b2-80b7-4333-9dca-dc35859d33da"
 authors = ["Cédric Simal", "University of Namur"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
@@ -13,6 +13,9 @@ Random123 = "1.6"
 Requires = "1"
 julia = "1"
 
+[extensions]
+DistributionsExt = "Distributions"
+
 [extras]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
@@ -21,3 +24,6 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Test", "Random123", "Random", "Distributions", "Aqua"]
+
+[weakdeps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"

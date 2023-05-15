@@ -1,4 +1,5 @@
 using RandomNoise:  noise_getindex
+using Distributions
 
 @testset "Distributions compat" begin
     sqn = SquirrelNoise5()

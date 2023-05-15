@@ -1,3 +1,9 @@
+module DistributionsExt
+
+using RandomNoise
+using RandomNoise: noise_convert
+import RandomNoise: NoiseMap, noise_getindex
+isdefined(Base, :get_extension) ? (using Distributions) : (using ..Distributions)
 
 """
     NoiseMap(rng::AbstractNoise, d::UnivariateDistribution, dim::Integer)
@@ -51,3 +57,5 @@ end
 
 # override to guarantee Bool output type
 @inline noise_getindex(rng::AbstractNoise, d::Distributions.Bernoulli, i) = isless(noise_convert(noise(i,rng), Float64), d.p)
+
+end # module
