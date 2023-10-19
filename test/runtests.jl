@@ -4,6 +4,8 @@ using Random
 using Distributions
 using Test
 using Aqua
+using PropCheck
+using JET
 
 @testset "RandomNoise.jl" begin
     include("pairing_functions.jl")
@@ -15,4 +17,5 @@ using Aqua
     include("transforms.jl")
     include("distributions.jl")
     Aqua.test_all(RandomNoise)
+    JET.report_package("RandomNoise")
 end

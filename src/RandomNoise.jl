@@ -67,7 +67,7 @@ end
 function __init__()
     # Optional support for Distributions
     @static if !isdefined(Base, :get_extension)
-        @require Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f" include("../ext/DistributionsExt.jl")
+        @require Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f" include("../ext/RandomNoiseDistributionsExt.jl")
     end
 end
 
