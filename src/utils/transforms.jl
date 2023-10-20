@@ -14,4 +14,6 @@ For floating point numbers, the values are uniformly distributed in the interval
 """
 struct NoiseUniform{T<:AbstractFloat} end
 
+NoiseUniform() = NoiseUniform{Float64}()
+
 @inline noise_getindex(rng::AbstractNoise, ::NoiseUniform{T}, i) where T = noise_convert(noise(i,rng), T)

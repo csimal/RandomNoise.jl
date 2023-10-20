@@ -43,9 +43,9 @@ end
 @inline Base.size(A::NoiseArray, d::Integer) = length(A.axes[d])
 @inline Base.size(A::NoiseArray{<:Any,N}) where {N} = length.(A.axes)
 
-IndexStyle(::Type{<:NoiseArray}) = IndexLinear()
+Base.IndexStyle(::Type{<:NoiseArray}) = IndexLinear()
 
-Base.@propagate_inbounds @inline function getindex(A::NoiseArray{T}, i::Integer) where T
+Base.@propagate_inbounds @inline function getindex(A::NoiseArray{T,N,R,F}, i::Integer) where {T,N,R,F}
     @boundscheck checkbounds(A,i)
     noise_getindex(A.noise, A.transform, i, T)
 end
