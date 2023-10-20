@@ -1,4 +1,4 @@
-module DistributionsExt
+module RandomNoiseDistributionsExt
 
 using RandomNoise
 using RandomNoise: noise_convert
