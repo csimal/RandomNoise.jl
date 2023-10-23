@@ -49,8 +49,9 @@ export NoiseUniform
 
 include("utils/pairing_functions.jl")
 include("noise_maps.jl")
+include("noise_arrays.jl")
 
-export NoiseMap
+export NoiseMap, NoiseArray
 
 using Random123
 

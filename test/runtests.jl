@@ -12,6 +12,7 @@ using Aqua
     include("convert.jl")
     include("noise_rng.jl")
     include("noise_maps.jl")
+    include("noise_arrays.jl")
     include("transforms.jl")
     include("distributions.jl")
     Aqua.test_all(RandomNoise)
