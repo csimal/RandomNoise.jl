@@ -7,6 +7,9 @@ Supertype for random noise functions. `T` indicates the return type.
 """
 abstract type AbstractNoise{T} end
 
+# Make noise functions behave as scalars in broadcast
+Base.broadcastable(n::AbstractNoise) = Ref(n)
+
 """
     noise(n, noise::AbstractNoise)
 

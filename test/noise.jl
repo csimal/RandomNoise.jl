@@ -39,4 +39,8 @@
         @test noise(0x00000001, m3n) == 0xfbf1402a
         @test noise(1, m3n) == noise(0x00000001, m3n)
     end
+    @testset "Broadcast" begin
+        sqn = SquirrelNoise5()
+        @test noise.(1:10, sqn) == [noise(i,sqn) for i in 1:10]
+    end
 end
