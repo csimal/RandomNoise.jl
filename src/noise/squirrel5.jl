@@ -30,11 +30,11 @@ SquirrelNoise5() = SquirrelNoise5(UInt32(0))
 
 Base.:(==)(sqn1::SquirrelNoise5, sqn2::SquirrelNoise5) = sqn1.seed == sqn2.seed
 
-const SQ5_BIT_NOISE1 = 0xd2a80a3f
-const SQ5_BIT_NOISE2 = 0xa884f197
-const SQ5_BIT_NOISE3 = 0x6C736F4B
-const SQ5_BIT_NOISE4 = 0xB79F3ABB
-const SQ5_BIT_NOISE5 = 0x1b56c4f5
+const SQ5_BIT_NOISE1::UInt32 = 0xd2a80a3f
+const SQ5_BIT_NOISE2::UInt32 = 0xa884f197
+const SQ5_BIT_NOISE3::UInt32 = 0x6C736F4B
+const SQ5_BIT_NOISE4::UInt32 = 0xB79F3ABB
+const SQ5_BIT_NOISE5::UInt32 = 0x1b56c4f5
 
 @inline noise(n::UInt32, s::SquirrelNoise5) = squirrel_noise(n, s.seed)
 
