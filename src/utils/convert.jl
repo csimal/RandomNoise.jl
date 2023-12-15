@@ -25,7 +25,7 @@ begin
             @inline function _convert(n::Integer, ::Type{NTuple{$N,$U}})
                 unsafe_load(Ptr{NTuple{$N,$U}}(pointer_from_objref(Ref(n % $T))))
             end
-            
+
         end
     end
     @inline function _convert(n::Union{Int64,UInt64}, ::Type{NTuple{4,UInt64}})::NTuple{4,UInt64}
@@ -62,6 +62,84 @@ end
     Float32(r >>> 8) * Float32(0x1.0p-24)
 end
 
-@inline function noise_convert(r::UInt64, ::Type{Float64})  
+@inline function noise_convert(r::UInt64, ::Type{Float64})
     Float64(r >>> 11) * 0x1.0p-53
+end
+
+# higher density floats when we have enough bits (see below)
+@inline function noise_convert(r::UInt32, ::Type{Float16})
+    dense_uniform_float_01(r)
+end
+
+
+@inline function noise_convert(r::UInt64, ::Type{Float32})
+    dense_uniform_float_01(r)
+end
+
+@inline function noise_convert(r::UInt128, ::Type{Float64})
+    dense_uniform_float_01(r)
+end
+
+#=
+Efficient dense Float32 [0,1) sampling https://marc-b-reynolds.github.io/distribution/2017/01/17/DenseFloat.html#the-parts-im-not-tell-you
+
+Explanation:
+The idea is to generate a floating point value by first choosing an interval [2^(-k-1),2^-k) which will contain exactly as many values as the significand allows. Since the probability of sampling such interval is 2^-(k+1), we can get k by sampling a (p=0.5) geometric distribution. This can be done efficiently by counting the number of leading zeroes of a random bitstring.
+
+In order to do this efficiently, we take twice as many random bits as the desired type size, reserve as many bits as needed for the significand, and use the rest for the exponent.
+
+For example, for a 32-bit float, we take a 64-bit integer, chop off 23 bits for the significand, and use the remaining 41 bits for the exponent. This means we can get k as high as 40.
+
+With the exception of 16-bit floats, we don't get enough bits to cover all values in [0,1)
+=#
+
+"""
+    dense_uniform_float_01(n::UInt32)
+
+Generate a 16-bit floating point value in [0,1) from a 32-bit unsigned integer.
+
+The interval [0,1) is densely populated, in the sense that all representable values are generated.
+"""
+@inline function dense_uniform_float_01(n::UInt32)
+    lz = min(leading_zeros(n), 14)
+    e::UInt16 = 14 - lz
+    m::UInt16 = (n % UInt16) & 0x03ff # (1 << 10) - 1
+    reinterpret(Float16, (e << 10) | m)
+end
+
+"""
+    dense_uniform_float_01(n::UInt64)
+
+Generate a 32-bit floating point value in [0,1) from a 64-bit unsigned integer.
+
+The interval [2^-40, 1) is densely populated (all representable values are generated). The remaining [0,2^-40) interval is equidistantly populated (with distance 2^-64).
+
+"""
+@inline function dense_uniform_float_01(n::UInt64)
+    lz = leading_zeros(n)
+    if lz <= 40
+        e::UInt32 = 126 - lz
+        m::UInt32 = (n % UInt32) & 0x7fffff # (1 << 23) -1
+        return reinterpret(Float32, (e << 23) | m)
+    else
+        return ldexp(1.0f0, -64) * Float32(n % UInt32)
+    end
+end
+
+"""
+    dense_uniform_float_01(n::UInt128)
+
+Generate a 64-bit floating point value in [0,1) from a 128-bit unsigned integer.
+
+The interval [2^-75, 1) is densely populated (all representable values are generated). The remaining [0,2^-75) interval is equidistantly populated (with distance 2^-128).
+"""
+@inline function dense_uniform_float_01(n::UInt128)
+    lz = leading_zeros(n)
+    if lz <= 75
+        e::UInt64 = 1022 - lz
+        m::UInt64 = (n % UInt64) & 0x000fffffffffffff # (1 << 52) -1
+        return reinterpret(Float64, (e << 52) | m)
+    else
+        return ldexp(1.0, -128) * Float64(n % UInt64)
+    end
 end
